@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+<title>Soumajit Chakraborty | Software &amp; AI Developer</title>
+<meta name="description" content="Portfolio of Soumajit Chakraborty — Software Developer building real-time, AI-driven web applications with computer vision, Python and full-stack JavaScript." />
+<meta name="author" content="Soumajit Chakraborty" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Soumajit Chakraborty | Software & AI Developer" />
+<meta property="og:description" content="Real-time, AI-driven web applications — computer vision, full-stack development, and everything in between." />
+<meta property="og:image" content="assets/profile.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Soumajit Chakraborty | Software & AI Developer" />
+<meta name="twitter:description" content="Real-time, AI-driven web applications — computer vision, full-stack development, and everything in between." />
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+<!-- Styles -->
+<link rel="stylesheet" href="style.css" />
+</head>
+<body data-theme="dark">
+
+<!-- ============ CUSTOM CURSOR ============ -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ============ LOADING SCREEN ============ -->
+<div class="loader" id="loader">
+  <div class="loader-inner">
+    <div class="loader-mark">
+      <svg viewBox="0 0 100 100" class="loader-svg">
+        <polygon points="50,6 90,28 90,72 50,94 10,72 10,28" class="loader-hex" />
+        <polygon points="50,6 90,28 90,72 50,94 10,72 10,28" class="loader-hex loader-hex-fill" />
+      </svg>
+      <span class="loader-code">SC</span>
+    </div>
+    <div class="loader-text">
+      <span class="loader-label">INITIALIZING</span>
+      <div class="loader-bar"><div class="loader-bar-fill" id="loaderBarFill"></div></div>
+      <span class="loader-percent" id="loaderPercent">0%</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCROLL PROGRESS ============ -->
+<div class="scroll-progress"><div class="scroll-progress-fill" id="scrollProgressFill"></div></div>
+
+<!-- ============ 3D CANVAS BACKGROUND ============ -->
+<canvas id="webgl-bg"></canvas>
+<div class="grain-overlay"></div>
+
+<!-- ============ NAVIGATION ============ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="#home" class="nav-logo">
+      <span class="logo-bracket">&lt;</span>SC<span class="logo-bracket">/&gt;</span>
+    </a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" class="nav-link active" data-section="home">Home</a></li>
+      <li><a href="#about" class="nav-link" data-section="about">About</a></li>
+      <li><a href="#skills" class="nav-link" data-section="skills">Skills</a></li>
+      <li><a href="#projects" class="nav-link" data-section="projects">Projects</a></li>
+      <li><a href="#experience" class="nav-link" data-section="experience">Experience</a></li>
+      <li><a href="#achievements" class="nav-link" data-section="achievements">Achievements</a></li>
+      <li><a href="#contact" class="nav-link" data-section="contact">Contact</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle light and dark theme" title="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      </button>
+      <button class="icon-btn theme-color-btn" id="colorSwitchToggle" aria-label="Switch accent color" title="Switch accent color">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 000 18c1.5 0 2-1 2-2s-.5-1.5-.5-2.5S14.5 15 16 15h1a4 4 0 004-4"/><circle cx="8" cy="10" r="1" fill="currentColor"/><circle cx="12" cy="7" r="1" fill="currentColor"/><circle cx="16" cy="10" r="1" fill="currentColor"/></svg>
+      </button>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- accent color picker -->
+  <div class="color-swatches" id="colorSwatches">
+    <button class="swatch" data-accent="cyan" style="--sw:#00e5ff" title="Cyan"></button>
+    <button class="swatch" data-accent="violet" style="--sw:#b14eff" title="Violet"></button>
+    <button class="swatch" data-accent="magenta" style="--sw:#ff2e88" title="Magenta"></button>
+    <button class="swatch" data-accent="lime" style="--sw:#a6ff4d" title="Lime"></button>
+    <button class="swatch" data-accent="amber" style="--sw:#ffb84d" title="Amber"></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <ul>
+    <li><a href="#home" class="mobile-link">Home</a></li>
+    <li><a href="#about" class="mobile-link">About</a></li>
+    <li><a href="#skills" class="mobile-link">Skills</a></li>
+    <li><a href="#projects" class="mobile-link">Projects</a></li>
+    <li><a href="#experience" class="mobile-link">Experience</a></li>
+    <li><a href="#achievements" class="mobile-link">Achievements</a></li>
+    <li><a href="#contact" class="mobile-link">Contact</a></li>
+  </ul>
+</div>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <section id="home" class="hero">
+    <div class="hero-grid-overlay"></div>
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <p class="hero-eyebrow reveal-up">
+          <span class="eyebrow-dot"></span> AVAILABLE FOR OPPORTUNITIES
+        </p>
+        <h1 class="hero-title">
+          <span class="hero-line reveal-up">Hi, I'm</span>
+          <span class="hero-line hero-name reveal-up">Soumajit Chakraborty</span>
+        </h1>
+        <div class="hero-role reveal-up">
+          <span class="role-prefix">I build things as a</span>
+          <span class="typed-wrap"><span id="typedText"></span><span class="typed-cursor">|</span></span>
+        </div>
+        <p class="hero-desc reveal-up">
+          Software developer crafting real‑time, AI‑driven systems — from computer‑vision pipelines
+          that watch the road, to full‑stack web apps that ship. I like problems where perception
+          meets product.
+        </p>
+        <div class="hero-cta reveal-up">
+          <a href="#projects" class="btn btn-primary magnetic">
+            <span>View Projects</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#contact" class="btn btn-ghost magnetic">
+            <span>Contact Me</span>
+          </a>
+          <a href="#" class="btn btn-outline magnetic" id="resumeBtn" download="Soumajit_Chakraborty_Resume.pdf">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
+            <span>Download Resume</span>
+          </a>
+        </div>
+
+        <div class="hero-social reveal-up">
+          <a href="https://github.com/" target="_blank" rel="noopener" aria-label="GitHub" class="social-dot"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.93.57.1.78-.25.78-.55v-2.14c-3.2.7-3.87-1.34-3.87-1.34-.53-1.32-1.28-1.68-1.28-1.68-1.05-.7.08-.69.08-.69 1.16.08 1.77 1.18 1.77 1.18 1.03 1.75 2.7 1.25 3.36.96.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.27-5.23-5.65 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .96-.3 3.15 1.18a10.9 10.9 0 015.73 0c2.19-1.48 3.15-1.18 3.15-1.18.62 1.58.23 2.75.11 3.04.73.8 1.18 1.82 1.18 3.07 0 4.39-2.69 5.36-5.25 5.64.41.36.78 1.06.78 2.14v3.17c0 .3.21.66.79.55A10.51 10.51 0 0023.5 12C23.5 5.65 18.35.5 12 .5z"/></svg></a>
+          <a href="https://linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn" class="social-dot"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.15 1.45-2.15 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.75v20.5C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.75V1.75C24 .78 23.2 0 22.22 0z"/></svg></a>
+          <a href="mailto:soumajit@example.com" aria-label="Email" class="social-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg></a>
+          <a href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram" class="social-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://x.com/" target="_blank" rel="noopener" aria-label="Twitter / X" class="social-dot"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23.3 22h-6.9l-5.4-6.9L4.8 22H1.7l8.1-9.3L1 2h7l4.9 6.3L18.9 2zm-1.2 18h1.9L7.4 3.9H5.4L17.7 20z"/></svg></a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-3d-stage" id="hero3DStage"></div>
+        <div class="hero-frame-ring"></div>
+        <div class="hero-photo-card">
+          <div class="hero-photo-inner">
+            <img src="assets/profile.png" alt="Soumajit Chakraborty" class="photo-img" width="130" height="130" />
+          </div>
+          <span class="photo-tag">SOUMAJIT.C</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-cue">
+      <span>SCROLL</span>
+      <div class="scroll-cue-line"><div class="scroll-cue-dot"></div></div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section id="about" class="section about-section">
+    <div class="section-head">
+      <span class="section-eyebrow reveal-up">01 / About</span>
+      <h2 class="section-title reveal-up">Who's building this</h2>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-copy reveal-up">
+        <p class="about-lead">
+          I'm a software developer who likes taking systems from “this could work” to
+          “this runs in production.” My focus sits at the intersection of
+          <span class="hl">computer vision</span>, <span class="hl">real‑time web apps</span>,
+          and pragmatic engineering.
+        </p>
+        <p>
+          Most recently I built <strong>SafeDrive‑AI</strong>, a real‑time driver drowsiness
+          detection system that watches eye closure, head pose and distraction through a webcam
+          feed, streams results over WebSockets, and gracefully degrades from a MediaPipe
+          pipeline to a lightweight Haar‑cascade fallback on constrained infrastructure.
+          I care about the unglamorous parts too — deployment limits, silent failures,
+          fallback logic — because that's where real products actually break.
+        </p>
+
+        <div class="about-meta">
+          <div class="meta-block">
+            <span class="meta-label">Education</span>
+            <p class="meta-value">B.Tech, Computer Science &amp; Engineering</p>
+          </div>
+          <div class="meta-block">
+            <span class="meta-label">Objective</span>
+            <p class="meta-value">Building reliable, AI‑powered products — one shipped feature at a time.</p>
+          </div>
+        </div>
+
+        <div class="about-timeline">
+          <div class="tl-item reveal-up">
+            <span class="tl-dot"></span>
+            <div class="tl-content">
+              <span class="tl-year">2023</span>
+              <p>Started formal CS education — fell for algorithms and systems thinking.</p>
+            </div>
+          </div>
+          <div class="tl-item reveal-up">
+            <span class="tl-dot"></span>
+            <div class="tl-content">
+              <span class="tl-year">2024</span>
+              <p>Went deep on Python, computer vision (OpenCV, MediaPipe), and full‑stack web dev.</p>
+            </div>
+          </div>
+          <div class="tl-item reveal-up">
+            <span class="tl-dot"></span>
+            <div class="tl-content">
+              <span class="tl-year">2025</span>
+              <p>Shipped SafeDrive‑AI end‑to‑end — from model to deployed WebSocket‑powered dashboard.</p>
+            </div>
+          </div>
+          <div class="tl-item reveal-up">
+            <span class="tl-dot"></span>
+            <div class="tl-content">
+              <span class="tl-year">Now</span>
+              <p>Exploring applied ML, distributed systems, and building this very portfolio.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-stats reveal-up">
+        <div class="stat-card">
+          <span class="stat-num" data-count="18">0</span>
+          <span class="stat-plus">+</span>
+          <span class="stat-label">Projects Completed</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" data-count="9">0</span>
+          <span class="stat-plus">+</span>
+          <span class="stat-label">Certifications</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" data-count="24">0</span>
+          <span class="stat-plus">+</span>
+          <span class="stat-label">Technologies Learned</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" data-count="450">0</span>
+          <span class="stat-plus">+</span>
+          <span class="stat-label">Coding Problems Solved</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SKILLS ============ -->
+  <section id="skills" class="section skills-section">
+    <div class="section-head">
+      <span class="section-eyebrow reveal-up">02 / Skills</span>
+      <h2 class="section-title reveal-up">Tools of the trade</h2>
+    </div>
+
+    <div class="skills-groups" id="skillsGroups">
+      <!-- populated in part by markup, animated by JS -->
+      <div class="skill-group">
+        <h3 class="skill-group-title">Programming</h3>
+        <div class="skill-cards">
+          <div class="skill-card" data-skill="C" data-level="75"><div class="skill-card-top"><span class="skill-name">C</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+          <div class="skill-card" data-skill="C++" data-level="80"><div class="skill-card-top"><span class="skill-name">C++</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+          <div class="skill-card" data-skill="Python" data-level="95"><div class="skill-card-top"><span class="skill-name">Python</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+          <div class="skill-card" data-skill="Java" data-level="70"><div class="skill-card-top"><span class="skill-name">Java</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+          <div class="skill-card" data-skill="JavaScript" data-level="88"><div class="skill-card-top"><span class="skill-name">JavaScript</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <h3 class="skill-group-title">Web Development</h3>
+        <div class="skill-cards">
+          <div class="skill-card" data-skill="HTML" data-level="95"><div class="skill-card-top"><span class="skill-name">HTML</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+          <div class="skill-card" data-skill="CSS" data-level="90"><div class="skill-card-top"><span class="skill-name">CSS</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+          <div class="skill-card" data-skill="React" data-level="82"><div class="skill-card-top"><span class="skill-name">React</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+          <div class="skill-card" data-skill="Node.js" data-level="78"><div class="skill-card-top"><span class="skill-name">Node.js</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+          <div class="skill-card" data-skill="Express" data-level="76"><div class="skill-card-top"><span class="skill-name">Express</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <h3 class="skill-group-title">Databases</h3>
+        <div class="skill-cards">
+          <div class="skill-card" data-skill="MySQL" data-level="80"><div class="skill-card-top"><span class="skill-name">MySQL</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+          <div class="skill-card" data-skill="MongoDB" data-level="77"><div class="skill-card-top"><span class="skill-name">MongoDB</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <h3 class="skill-group-title">Tools</h3>
+        <div class="skill-cards">
+          <div class="skill-card" data-skill="Git" data-level="90"><div class="skill-card-top"><span class="skill-name">Git</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+          <div class="skill-card" data-skill="GitHub" data-level="90"><div class="skill-card-top"><span class="skill-name">GitHub</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+          <div class="skill-card" data-skill="VS Code" data-level="93"><div class="skill-card-top"><span class="skill-name">VS Code</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+          <div class="skill-card" data-skill="Linux" data-level="72"><div class="skill-card-top"><span class="skill-name">Linux</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <h3 class="skill-group-title">AI / ML</h3>
+        <div class="skill-cards">
+          <div class="skill-card" data-skill="TensorFlow" data-level="70"><div class="skill-card-top"><span class="skill-name">TensorFlow</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+          <div class="skill-card" data-skill="OpenCV" data-level="88"><div class="skill-card-top"><span class="skill-name">OpenCV</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+          <div class="skill-card" data-skill="Machine Learning" data-level="80"><div class="skill-card-top"><span class="skill-name">Machine Learning</span></div><div class="skill-bar"><div class="skill-bar-fill"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section id="projects" class="section projects-section">
+    <div class="section-head">
+      <span class="section-eyebrow reveal-up">03 / Projects</span>
+      <h2 class="section-title reveal-up">Selected work</h2>
+    </div>
+
+    <div class="projects-grid" id="projectsGrid">
+
+      <article class="project-card tilt-card reveal-up">
+        <a class="project-media" href="https://safedrive-ai-2.onrender.com" target="_blank" rel="noopener" aria-label="Open SafeDrive-AI live site">
+          <div class="browser-frame">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">safedrive-ai-2.onrender.com</span>
+            <span class="live-badge"><i class="live-pulse"></i>LIVE</span>
+          </div>
+          <div class="iframe-wrap">
+            <iframe src="https://safedrive-ai-2.onrender.com" loading="lazy" title="SafeDrive-AI live preview" tabindex="-1"></iframe>
+          </div>
+        </a>
+        <div class="project-body">
+          <h3 class="project-title">SafeDrive‑AI</h3>
+          <p class="project-desc">Real‑time driver drowsiness detection using computer vision — tracks eye closure, head pose and distraction, with a WebSocket dashboard and an automatic MediaPipe → Haar‑cascade fallback for constrained deployments.</p>
+          <div class="tech-stack">
+            <span class="tech-pill"><i class="fa-brands fa-python"></i> Python</span>
+            <span class="tech-pill">Flask</span>
+            <span class="tech-pill">MediaPipe</span>
+            <span class="tech-pill">OpenCV</span>
+            <span class="tech-pill">WebSockets</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/Soumajit1/-SafeDrive-AI" target="_blank" rel="noopener" class="project-link"><i class="fa-brands fa-github"></i> Code</a>
+            <a href="https://safedrive-ai-2.onrender.com" target="_blank" rel="noopener" class="project-link project-link-primary">Live Demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project-card tilt-card reveal-up">
+        <a class="project-media" href="https://soumajit1.github.io/Soumajit1-Soumajit1-SyntexSparks-BusTracking/" target="_blank" rel="noopener" aria-label="Open Real-Time Bus Tracking System live site">
+          <div class="browser-frame">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">soumajit1.github.io</span>
+            <span class="live-badge"><i class="live-pulse"></i>LIVE</span>
+          </div>
+          <div class="iframe-wrap">
+            <iframe src="https://soumajit1.github.io/Soumajit1-Soumajit1-SyntexSparks-BusTracking/" loading="lazy" title="Real-Time Bus Tracking System live preview" tabindex="-1"></iframe>
+          </div>
+        </a>
+        <div class="project-body">
+          <h3 class="project-title">Real‑Time Bus Tracking System</h3>
+          <p class="project-desc">A real‑time bus tracking web app with an interactive map, role‑based modules, and live GPS updates. Firebase powers sub‑second location sync, with dynamic route visualization via the Maps API.</p>
+          <div class="tech-stack">
+            <span class="tech-pill"><i class="fa-brands fa-html5"></i> HTML</span>
+            <span class="tech-pill"><i class="fa-brands fa-css3-alt"></i> CSS</span>
+            <span class="tech-pill"><i class="fa-brands fa-js"></i> JavaScript</span>
+            <span class="tech-pill">Firebase</span>
+            <span class="tech-pill">Maps API</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/Soumajit1/Soumajit1-Soumajit1-SyntexSparks-BusTracking" target="_blank" rel="noopener" class="project-link"><i class="fa-brands fa-github"></i> Code</a>
+            <a href="https://soumajit1.github.io/Soumajit1-Soumajit1-SyntexSparks-BusTracking/" target="_blank" rel="noopener" class="project-link project-link-primary">Live Demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project-card tilt-card reveal-up">
+        <a class="project-media" href="https://soumajit1.github.io/Language-Translator-/" target="_blank" rel="noopener" aria-label="Open Language Translator live site">
+          <div class="browser-frame">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">soumajit1.github.io</span>
+            <span class="live-badge"><i class="live-pulse"></i>LIVE</span>
+          </div>
+          <div class="iframe-wrap">
+            <iframe src="https://soumajit1.github.io/Language-Translator-/" loading="lazy" title="Language Translator live preview" tabindex="-1"></iframe>
+          </div>
+        </a>
+        <div class="project-body">
+          <h3 class="project-title">Language Translator</h3>
+          <p class="project-desc">A clean, client‑side language translation tool — type or paste text, pick a target language, and get an instant translation with a fast, dependency‑light interface.</p>
+          <div class="tech-stack">
+            <span class="tech-pill"><i class="fa-brands fa-html5"></i> HTML</span>
+            <span class="tech-pill"><i class="fa-brands fa-css3-alt"></i> CSS</span>
+            <span class="tech-pill"><i class="fa-brands fa-js"></i> JavaScript</span>
+            <span class="tech-pill">Translation API</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/Soumajit1/Language-Translator" target="_blank" rel="noopener" class="project-link"><i class="fa-brands fa-github"></i> Code</a>
+            <a href="https://soumajit1.github.io/Language-Translator-/" target="_blank" rel="noopener" class="project-link project-link-primary">Live Demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section id="experience" class="section experience-section">
+    <div class="section-head">
+      <span class="section-eyebrow reveal-up">04 / Experience</span>
+      <h2 class="section-title reveal-up">Where the work happened</h2>
+    </div>
+
+    <div class="v-timeline" id="vTimeline">
+      <div class="v-timeline-line"><div class="v-timeline-fill" id="vTimelineFill"></div></div>
+
+      <div class="v-item reveal-up">
+        <div class="v-dot"></div>
+        <div class="v-card">
+          <span class="v-tag">Internship</span>
+          <h3>Software Development Intern</h3>
+          <p class="v-org">Company Name · Remote</p>
+          <p class="v-desc">Contributed to internal tooling and API integrations, working within an existing Flask/React codebase and shipping features under code review.</p>
+          <span class="v-date">Summer 2025</span>
+        </div>
+      </div>
+
+      <div class="v-item reveal-up">
+        <div class="v-dot"></div>
+        <div class="v-card">
+          <span class="v-tag">Open Source</span>
+          <h3>Contributor</h3>
+          <p class="v-org">Open Source Project</p>
+          <p class="v-desc">Submitted bug fixes and documentation improvements to a computer‑vision utility library; helped triage issues from first‑time contributors.</p>
+          <span class="v-date">2025 — Present</span>
+        </div>
+      </div>
+
+      <div class="v-item reveal-up">
+        <div class="v-dot"></div>
+        <div class="v-card">
+          <span class="v-tag">Freelance</span>
+          <h3>Freelance Web Developer</h3>
+          <p class="v-org">Independent</p>
+          <p class="v-desc">Designed and built small business websites and dashboards end‑to‑end, from client requirements through deployment.</p>
+          <span class="v-date">2024 — 2025</span>
+        </div>
+      </div>
+
+      <div class="v-item reveal-up">
+        <div class="v-dot"></div>
+        <div class="v-card">
+          <span class="v-tag">Leadership</span>
+          <h3>Core Team Member</h3>
+          <p class="v-org">Campus Tech Community</p>
+          <p class="v-desc">Organized workshops on Git, web development, and computer vision for peers; mentored juniors on first projects.</p>
+          <span class="v-date">2024 — Present</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ACHIEVEMENTS ============ -->
+  <section id="achievements" class="section achievements-section">
+    <div class="section-head">
+      <span class="section-eyebrow reveal-up">05 / Achievements</span>
+      <h2 class="section-title reveal-up">Recognition &amp; milestones</h2>
+    </div>
+
+    <div class="achv-grid">
+      <div class="achv-card reveal-up">
+        <div class="achv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.4 6.6L21 9l-5 4.6L17.4 21 12 17.3 6.6 21 8 13.6 3 9l6.6-.4z"/></svg></div>
+        <h3>Microsoft Learn Student Ambassador</h3>
+        <p>Selected to lead technical sessions and community engagement as part of Microsoft's global student program.</p>
+      </div>
+      <div class="achv-card reveal-up">
+        <div class="achv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <h3>GDG on Campus</h3>
+        <p>Active member of Google Developer Groups on Campus, contributing to events on cloud and web technologies.</p>
+      </div>
+      <div class="achv-card reveal-up">
+        <div class="achv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <h3>Google Arcade</h3>
+        <p>Completed multiple Google Cloud skill badges and challenge labs through the Arcade program.</p>
+      </div>
+      <div class="achv-card reveal-up">
+        <div class="achv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h16v10H8l-4 4z"/></svg></div>
+        <h3>Hackathons</h3>
+        <p>Placed in multiple hackathons building AI‑assisted tools under 24–36 hour time constraints.</p>
+      </div>
+      <div class="achv-card reveal-up">
+        <div class="achv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 15a5 5 0 100-10 5 5 0 000 10z"/><path d="M8.5 13.5L7 21l5-2.5L17 21l-1.5-7.5"/></svg></div>
+        <h3>Certifications</h3>
+        <p>Completed certifications spanning machine learning, cloud computing, and full‑stack development.</p>
+      </div>
+      <div class="achv-card reveal-up">
+        <div class="achv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 3H5v4M15 3h4v4M9 21H5v-4M15 21h4v-4"/></svg></div>
+        <h3>Coding Competitions</h3>
+        <p>Regular participant in competitive programming contests, steadily climbing problem‑solving rankings.</p>
+      </div>
+    </div>
+
+    <div class="cert-row">
+      <div class="cert-card reveal-up">
+        <div class="cert-glyph"><i class="fa-brands fa-oracle"></i></div>
+        <h4>Oracle Cloud Infrastructure AI Foundations Associate</h4>
+        <span class="cert-issuer">Oracle</span>
+        <a href="https://mylearn.oracle.com/ou/learning-path/become-an-oci-ai-foundations-associate-2025/147781" target="_blank" rel="noopener" class="btn btn-small btn-outline">View Certificate</a>
+      </div>
+      <div class="cert-card reveal-up">
+        <div class="cert-glyph"><i class="fa-brands fa-google"></i></div>
+        <h4>Google Analytics Certification</h4>
+        <span class="cert-issuer">Google</span>
+        <a href="https://skillshop.credential.net/00cbb0ac-2af7-441c-9d19-7a51a35fc5c6#acc.IArCBJ05" target="_blank" rel="noopener" class="btn btn-small btn-outline">Verify Credential</a>
+      </div>
+      <div class="cert-card reveal-up">
+        <div class="cert-glyph"><i class="fa-brands fa-google"></i></div>
+        <h4>Google Cloud Arcade</h4>
+        <span class="cert-issuer">Google Cloud · 96 labs completed</span>
+        <a href="https://www.skills.google/public_profiles/9ee8ea76-d8c0-4d35-8f70-30899201d3f4" target="_blank" rel="noopener" class="btn btn-small btn-outline">View Profile</a>
+      </div>
+      <div class="cert-card reveal-up">
+        <div class="cert-glyph"><i class="fa-brands fa-python"></i></div>
+        <h4>Python, Flask, HTML Essentials</h4>
+        <span class="cert-issuer">Udemy</span>
+        <span class="btn btn-small btn-outline cert-soon">Coming Soon</span>
+      </div>
+      <div class="cert-card reveal-up">
+        <div class="cert-glyph"><i class="fa-solid fa-code"></i></div>
+        <h4>Web Development Bootcamp</h4>
+        <span class="cert-issuer">HTML, CSS, PHP, MySQL, WordPress</span>
+        <span class="btn btn-small btn-outline cert-soon">Coming Soon</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROFILES ============ -->
+  <section id="profiles" class="section profiles-section">
+    <div class="section-head">
+      <span class="section-eyebrow reveal-up">06 / Profiles</span>
+      <h2 class="section-title reveal-up">Find me elsewhere</h2>
+    </div>
+
+    <div class="profile-cards">
+      <a class="profile-card reveal-up" href="https://github.com/Soumajit1" target="_blank" rel="noopener">
+        <div class="profile-card-top">
+          <span class="profile-icon"><i class="fa-brands fa-github"></i></span>
+          <img src="" alt="" class="profile-avatar" id="ghAvatar" />
+        </div>
+        <h3>GitHub</h3>
+        <p class="profile-handle">@Soumajit1</p>
+        <div class="profile-mini-stats">
+          <span><strong id="ghRepoMini">—</strong> repos</span>
+          <span><strong id="ghFollowerMini">—</strong> followers</span>
+        </div>
+        <span class="btn btn-small btn-outline profile-btn">Visit GitHub</span>
+      </a>
+
+      <a class="profile-card reveal-up" href="https://www.linkedin.com/in/soumajit-chakraborty-aec/" target="_blank" rel="noopener">
+        <div class="profile-card-top">
+          <span class="profile-icon"><i class="fa-brands fa-linkedin"></i></span>
+        </div>
+        <h3>LinkedIn</h3>
+        <p class="profile-handle">soumajit-chakraborty-aec</p>
+        <p class="profile-desc">B.Tech CSE student · GDGoC Core Committee Member · AI &amp; web development</p>
+        <span class="btn btn-small btn-outline profile-btn">Connect on LinkedIn</span>
+      </a>
+
+      <a class="profile-card reveal-up" href="https://leetcode.com/u/Soumajit1/" target="_blank" rel="noopener">
+        <div class="profile-card-top">
+          <span class="profile-icon"><i class="fa-solid fa-code"></i></span>
+        </div>
+        <h3>LeetCode</h3>
+        <p class="profile-handle">@Soumajit1</p>
+        <span class="btn btn-small btn-outline profile-btn">Visit Profile</span>
+      </a>
+
+      <a class="profile-card reveal-up" href="https://www.salesforce.com/trailblazer/y3fna5kwgph94bdy7e" target="_blank" rel="noopener">
+        <div class="profile-card-top">
+          <span class="profile-icon"><i class="fa-brands fa-salesforce"></i></span>
+        </div>
+        <h3>Salesforce Trailblazer</h3>
+        <p class="profile-desc">Trailblazer badge profile</p>
+        <span class="btn btn-small btn-outline profile-btn">View Profile</span>
+      </a>
+
+      <a class="profile-card reveal-up" href="https://www.skills.google/public_profiles/9ee8ea76-d8c0-4d35-8f70-30899201d3f4" target="_blank" rel="noopener">
+        <div class="profile-card-top">
+          <span class="profile-icon"><i class="fa-brands fa-google"></i></span>
+        </div>
+        <h3>Google Cloud Skills Boost</h3>
+        <p class="profile-desc">Public profile &amp; Arcade badges</p>
+        <span class="btn btn-small btn-outline profile-btn">View Profile</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ GITHUB ============ -->
+  <section id="github" class="section github-section">
+    <div class="section-head">
+      <span class="section-eyebrow reveal-up">07 / GitHub</span>
+      <h2 class="section-title reveal-up">Commit trail</h2>
+    </div>
+
+    <div class="github-panel reveal-up">
+      <div class="gh-stats-row">
+        <div class="gh-stat"><span class="gh-stat-num" id="ghRepos" data-count="0">0</span><span class="gh-stat-label">Repositories</span></div>
+        <div class="gh-stat"><span class="gh-stat-num" id="ghEvents" data-count="0">0</span><span class="gh-stat-label">Recent Public Events</span></div>
+        <div class="gh-stat"><span class="gh-stat-num" id="ghFollowers" data-count="0">0</span><span class="gh-stat-label">Followers</span></div>
+        <div class="gh-stat"><span class="gh-stat-num" id="ghStars" data-count="0">0</span><span class="gh-stat-label">Stars Earned</span></div>
+      </div>
+
+      <div class="contrib-graph" id="contribGraph"></div>
+      <p class="gh-caption" id="ghCaption">Loading live data from the GitHub API…</p>
+
+      <div class="lang-bars" id="langBars">
+        <div class="lang-row"><span class="lang-name">Loading…</span><div class="lang-track"><div class="lang-fill" style="--w:0%"></div></div><span class="lang-pct"></span></div>
+      </div>
+
+      <div class="top-repos" id="topRepos"></div>
+    </div>
+  </section>
+
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact" class="section contact-section">
+    <div class="section-head">
+      <span class="section-eyebrow reveal-up">07 / Contact</span>
+      <h2 class="section-title reveal-up">Let's build something</h2>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-info reveal-up">
+        <p class="contact-lead">
+          Have a project, an opportunity, or just want to talk through an idea?
+          My inbox is open.
+        </p>
+        <div class="contact-links">
+          <a href="mailto:soumajit@example.com" class="contact-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg>
+            soumajit@example.com
+          </a>
+          <a href="https://github.com/" target="_blank" rel="noopener" class="contact-link">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.93.57.1.78-.25.78-.55v-2.14c-3.2.7-3.87-1.34-3.87-1.34-.53-1.32-1.28-1.68-1.28-1.68-1.05-.7.08-.69.08-.69 1.16.08 1.77 1.18 1.77 1.18 1.03 1.75 2.7 1.25 3.36.96.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.27-5.23-5.65 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .96-.3 3.15 1.18a10.9 10.9 0 015.73 0c2.19-1.48 3.15-1.18 3.15-1.18.62 1.58.23 2.75.11 3.04.73.8 1.18 1.82 1.18 3.07 0 4.39-2.69 5.36-5.25 5.64.41.36.78 1.06.78 2.14v3.17c0 .3.21.66.79.55A10.51 10.51 0 0023.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+            github.com/soumajit
+          </a>
+          <a href="https://linkedin.com/" target="_blank" rel="noopener" class="contact-link">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.15 1.45-2.15 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.75v20.5C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.75V1.75C24 .78 23.2 0 22.22 0z"/></svg>
+            linkedin.com/in/soumajit
+          </a>
+        </div>
+
+        <div class="contact-social">
+          <a href="https://instagram.com/" target="_blank" rel="noopener" class="social-dot" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://x.com/" target="_blank" rel="noopener" class="social-dot" aria-label="Twitter / X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23.3 22h-6.9l-5.4-6.9L4.8 22H1.7l8.1-9.3L1 2h7l4.9 6.3L18.9 2zm-1.2 18h1.9L7.4 3.9H5.4L17.7 20z"/></svg></a>
+        </div>
+      </div>
+
+      <form class="contact-form reveal-up" id="contactForm" novalidate>
+        <div class="form-row">
+          <div class="form-field">
+            <input type="text" id="fName" name="name" placeholder=" " required minlength="2" />
+            <label for="fName">Your Name</label>
+            <span class="field-error" data-for="fName">Please enter your name (min. 2 characters).</span>
+          </div>
+          <div class="form-field">
+            <input type="email" id="fEmail" name="email" placeholder=" " required />
+            <label for="fEmail">Your Email</label>
+            <span class="field-error" data-for="fEmail">Please enter a valid email address.</span>
+          </div>
+        </div>
+        <div class="form-field">
+          <input type="text" id="fSubject" name="subject" placeholder=" " required minlength="3" />
+          <label for="fSubject">Subject</label>
+          <span class="field-error" data-for="fSubject">Please enter a subject.</span>
+        </div>
+        <div class="form-field">
+          <textarea id="fMessage" name="message" rows="5" placeholder=" " required minlength="10"></textarea>
+          <label for="fMessage">Message</label>
+          <span class="field-error" data-for="fMessage">Message should be at least 10 characters.</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-submit magnetic" id="submitBtn">
+          <span class="btn-submit-label">Send Message</span>
+          <span class="btn-submit-spinner"></span>
+        </button>
+
+        <div class="form-success" id="formSuccess">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+          <span>Message sent — I'll get back to you soon.</span>
+        </div>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="footer-logo"><span class="logo-bracket">&lt;</span>SC<span class="logo-bracket">/&gt;</span></span>
+      <p>Software &amp; AI Developer — building perception‑driven products.</p>
+    </div>
+    <div class="footer-social">
+      <a href="https://github.com/" target="_blank" rel="noopener" aria-label="GitHub" class="social-dot"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.93.57.1.78-.25.78-.55v-2.14c-3.2.7-3.87-1.34-3.87-1.34-.53-1.32-1.28-1.68-1.28-1.68-1.05-.7.08-.69.08-.69 1.16.08 1.77 1.18 1.77 1.18 1.03 1.75 2.7 1.25 3.36.96.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.27-5.23-5.65 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .96-.3 3.15 1.18a10.9 10.9 0 015.73 0c2.19-1.48 3.15-1.18 3.15-1.18.62 1.58.23 2.75.11 3.04.73.8 1.18 1.82 1.18 3.07 0 4.39-2.69 5.36-5.25 5.64.41.36.78 1.06.78 2.14v3.17c0 .3.21.66.79.55A10.51 10.51 0 0023.5 12C23.5 5.65 18.35.5 12 .5z"/></svg></a>
+      <a href="https://linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn" class="social-dot"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.15 1.45-2.15 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.75v20.5C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.75V1.75C24 .78 23.2 0 22.22 0z"/></svg></a>
+      <a href="mailto:soumajit@example.com" aria-label="Email" class="social-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg></a>
+      <a href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram" class="social-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://x.com/" target="_blank" rel="noopener" aria-label="Twitter / X" class="social-dot"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23.3 22h-6.9l-5.4-6.9L4.8 22H1.7l8.1-9.3L1 2h7l4.9 6.3L18.9 2zm-1.2 18h1.9L7.4 3.9H5.4L17.7 20z"/></svg></a>
+    </div>
+    <p class="footer-copy">© <span id="footerYear"></span> Soumajit Chakraborty. All rights reserved.</p>
+  </div>
+</footer>
+
+<button class="fab" id="scrollTopBtn" aria-label="Scroll to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<button class="music-toggle" id="musicToggle" aria-label="Toggle background ambience" title="Toggle ambience">
+  <svg class="music-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+  <svg class="music-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><line x1="2" y1="2" x2="22" y2="22"/></svg>
+</button>
+
+<!-- ============ LIBRARIES ============ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<script src="script.js"></script>
+</body>
+</html>
